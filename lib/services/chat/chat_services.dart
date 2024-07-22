@@ -142,4 +142,46 @@ class ChatService extends ChangeNotifier {
       return userDocs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     });
   }
+
+  // My Contacts
+  Future<void> addToMyContacts(String userId) async {
+    final currentUser = _auth.currentUser;
+    await _firestore
+        .collection("Users")
+        .doc(currentUser!.uid)
+        .collection("Contacts")
+        .doc(userId)
+        .set({});
+    notifyListeners();
+  }
+
+  // get my contacts stream
+  Stream<List<Map<String, dynamic>>> getAddedUserStream(String userId) {
+    return _firestore
+        .collection("Users")
+        .doc(userId)
+        .collection("Contacts")
+        .snapshots()
+        .asyncMap((snapshot) async {
+      // get list of blocked user ids
+      final addedUserIds = snapshot.docs.map((doc) => doc.id).toList();
+
+      final userDocs = await Future.wait(addedUserIds
+          .map((id) => _firestore.collection("Users").doc(id).get()));
+
+      // return as a list
+      return userDocs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    });
+  }
+
+  // Delete user from the contacts list
+  Future<void> deleteUser(String deletedUserId) async {
+    final currentUser = _auth.currentUser;
+    await _firestore
+        .collection("Users")
+        .doc(currentUser!.uid)
+        .collection("Contacts")
+        .doc(deletedUserId)
+        .delete();
+  }
 }

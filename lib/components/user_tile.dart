@@ -1,12 +1,15 @@
+import 'package:baate/services/chat/chat_services.dart';
 import 'package:flutter/material.dart';
 
 class UserTile extends StatelessWidget {
   final String text;
   final void Function()? onTap;
+  final String userID;
   const UserTile({
     super.key,
     required this.text,
     this.onTap,
+    required this.userID,
   });
 
   @override
@@ -27,9 +30,27 @@ class UserTile extends StatelessWidget {
           children: [
             // icon
             const Icon(Icons.person),
-            const SizedBox(width: 20,),
+            const SizedBox(
+              width: 20,
+            ),
             // user name
             Text(text),
+            const SizedBox(
+              width: 20,
+            ),
+            InkWell(
+              child: IconButton(
+                onPressed: () {
+                  ChatService().addToMyContacts(userID);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Added to Contacts"),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.person_add_alt),
+              ),
+            )
           ],
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
 
   // tap to go to register page
@@ -19,6 +20,7 @@ class LoginPage extends StatelessWidget {
     // try login
     try {
       await authService.signInWithEmailPassword(
+        _usernameController.text,
         _emailController.text,
         _pwController.text,
       );
@@ -60,6 +62,16 @@ class LoginPage extends StatelessWidget {
             height: 25,
           ),
 
+          // username textfield
+          MyTextfield(
+            hintText: "Username",
+            obscureText: false,
+            controller: _usernameController,
+          ),
+
+          const SizedBox(
+            height: 10,
+          ),
           // email textfield
           MyTextfield(
             hintText: "Email",

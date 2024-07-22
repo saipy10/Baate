@@ -68,7 +68,7 @@ class SettingsPage extends StatelessWidget {
                       )),
                   icon: Icon(
                     Icons.arrow_forward,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ],

@@ -3,20 +3,20 @@ import 'package:baate/services/auth/auth_service.dart';
 import 'package:baate/services/chat/chat_services.dart';
 import 'package:flutter/material.dart';
 
-class BlockedUsersPage extends StatelessWidget {
-  BlockedUsersPage({super.key});
+class MyContactsPage extends StatelessWidget {
+  MyContactsPage({super.key});
 
   // chat & auth service
   final ChatService chatService = ChatService();
   final AuthService authService = AuthService();
 
   // Unblock box
-  void _showUnblockBox(BuildContext context, String userId) {
+  void _showDeleteBox(BuildContext context, String userId) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Unblock User"),
-        content: const Text("Are you sure you want to unblock this user?"),
+        title: const Text("Delete Contact"),
+        content: const Text("Are you sure you want to delete this user?"),
         actions: [
           // cancel button
           TextButton(
@@ -24,18 +24,18 @@ class BlockedUsersPage extends StatelessWidget {
             child: const Text("Cancel"),
           ),
 
-          // unblock button
+          // delete button
           TextButton(
             onPressed: () {
-              chatService.unblockUser(userId);
+              chatService.deleteUser(userId);
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text("User Unblocked"),
+                  content: Text("User Deleted"),
                 ),
               );
             },
-            child: const Text("Unblock"),
+            child: const Text("Delete"),
           ),
         ],
       ),
@@ -50,11 +50,11 @@ class BlockedUsersPage extends StatelessWidget {
     // UI
     return Scaffold(
       appBar: AppBar(
-        title: const Text("BLOCKED USERS"),
+        title: const Text("ADDED USERS"),
         actions: const [],
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: chatService.getBlockedUserStream(userId),
+        stream: chatService.getAddedUserStream(userId),
         builder: (context, snapshot) {
           // errors
           if (snapshot.hasError) {
@@ -70,24 +70,24 @@ class BlockedUsersPage extends StatelessWidget {
             );
           }
 
-          final blockedUsers = snapshot.data ?? [];
+          final myContacts = snapshot.data ?? [];
 
           // no users
-          if (blockedUsers.isEmpty) {
+          if (myContacts.isEmpty) {
             return const Center(
-              child: Text("No blocked users"),
+              child: Text("No added users"),
             );
           }
 
           // load complete
           return ListView.builder(
-              itemCount: blockedUsers.length,
+              itemCount: myContacts.length,
               itemBuilder: (context, index) {
-                final user = blockedUsers[index];
+                final user = myContacts[index];
                 return UserTile(
                   text: user["email"],
                   userID: userId,
-                  onTap: () => _showUnblockBox(context, user['uid']),
+                  onTap: () => _showDeleteBox(context, user['uid']),
                 );
               });
         },

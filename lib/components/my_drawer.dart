@@ -1,3 +1,4 @@
+import 'package:baate/pages/my_contacts_page.dart';
 import 'package:baate/services/auth/auth_service.dart';
 import 'package:baate/pages/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,25 @@ class MyDrawer extends StatelessWidget {
               onTap: () {
                 // pop the drawer
                 Navigator.pop(context);
+              },
+            ),
+          ),
+          // Contacts list tile
+          Padding(
+            padding: const EdgeInsets.only(left: 25),
+            child: ListTile(
+              title: const Text("C O N T A C T S"),
+              leading: const Icon(Icons.contact_page),
+              onTap: () {
+                // pop the drawer
+                Navigator.pop(context);
+                // navigate to contacts page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyContactsPage(),
+                  ),
+                );
               },
             ),
           ),
